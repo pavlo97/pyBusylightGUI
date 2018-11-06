@@ -17,7 +17,7 @@ class ExampleApp(tk.Frame):
         tk.Frame.__init__(self,
                           master,
                           width=300,
-                          height=560)
+                          height=590)
         
     
         # Set the title
@@ -70,18 +70,22 @@ class ExampleApp(tk.Frame):
         self.blinkOn = False       
         self.blink_button = tk.Button(self, text="Blink ON", command=lambda: self.toggleBlinking())
         
+        self.partyOn = False       
+        self.party_button = tk.Button(self, text="START the party!!!", command=lambda: self.toggleParty())
+        
         self.close_button = tk.Button(self, command=self.bl.close, text="Close")
         self.off_button = tk.Button(self, command=self.bl.turn_off, text="Off")
                    
         # Put the controls on the form
         self.color_label.pack(fill=tk.X, side=tk.TOP)
         self.red_button.pack(fill=tk.X, side=tk.TOP)
+        self.orange_button.pack(fill=tk.X, side=tk.TOP)        
         self.yellow_button.pack(fill=tk.X, side=tk.TOP)
         self.green_button.pack(fill=tk.X, side=tk.TOP)
         self.blue_button.pack(fill=tk.X, side=tk.TOP)
+        self.purple_button.pack(fill=tk.X, side=tk.TOP)        
         self.pink_button.pack(fill=tk.X, side=tk.TOP)
-        self.orange_button.pack(fill=tk.X, side=tk.TOP)
-        self.purple_button.pack(fill=tk.X, side=tk.TOP)  
+          
         self.sound_label.pack(fill=tk.X, side=tk.TOP)
         self.funky_button.pack(fill=tk.X, side=tk.TOP)
         self.nordic_button.pack(fill=tk.X, side=tk.TOP)
@@ -91,7 +95,8 @@ class ExampleApp(tk.Frame):
 
         self.close_button.pack(fill=tk.X, side=tk.BOTTOM)       
         self.off_button.pack(fill=tk.X, side=tk.BOTTOM)
-        self.blink_button.pack(fill=tk.X, side=tk.BOTTOM)               
+        self.blink_button.pack(fill=tk.X, side=tk.BOTTOM)
+        self.party_button.pack(fill=tk.X, side=tk.BOTTOM)             
         self.control_label.pack(fill=tk.X, side=tk.BOTTOM)
         
     def toggleBlinking(self):
@@ -101,6 +106,14 @@ class ExampleApp(tk.Frame):
             self.blink_button.config(text="Blink OFF")
         else:
             self.blink_button.config(text="Blink ON")
+            
+    def toggleParty(self):
+        self.partyOn = not self.partyOn
+        self.bl.setParty(self.partyOn)
+        if self.partyOn:
+            self.party_button.config(text="STOP the party :(")
+        else:
+            self.party_button.config(text="START the party!!!")
  
     def run(self):
         ''' Run the app '''

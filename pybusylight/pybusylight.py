@@ -5,6 +5,7 @@ import signal
 import time
 import sys
 import threading
+import random
 
 ALIVE  = "8F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060455FFFFFF03EB"
 
@@ -45,6 +46,7 @@ class busylight:
         self.__connect_busylight__()
         self.setColor(1) #Green
         self.blink = False
+        self.party = False
         self.keepAlive()
         
         self.sound = 0 #Funky
@@ -102,13 +104,15 @@ class busylight:
         self.send()
 
     def setBlink(self,enable = False):
-        self.blink = enable       
         if enable:
             self.light_on=True
             self.blinkTimer = threading.Timer(BLINKING_PERIOD,self.handleBlinking)
             self.handleBlinking()
         else:
-            self.blinkTimer.cancel()
+            if self.blink:
+                self.blinkTimer.cancel()
+        
+        self.blink = enable       
 
     def handleBlinking(self):
         if self.light_on:
@@ -121,12 +125,26 @@ class busylight:
         self.blinkTimer = threading.Timer(BLINKING_PERIOD,self.handleBlinking)
         self.blinkTimer.start()
         
-    def setParty(self):
+    def setParty(self, enable = False):
+        if enable:
+            self.partyTimer = threading.Timer(BLINKING_PERIOD,self.handleParty)
+            self.handleParty()
+        else:
+            if self.party:
+                self.partyTimer.cancel()
+                
+        self.party = enable        
         
+    def handleParty(self):
+        color = random.randint(0,6)
+        time = random.randint(1,5)*0.1
+        self.setColor(color)
+        self.partyTimer = threading.Timer(time,self.handleParty)
+        self.partyTimer.start()
         
     def turn_off(self):
-        if self.blink:
-            self.blinkTimer.cancel()        
+        self.setBlink(False)
+        self.setParty(False)                    
         self.buffer = LIGHT_OFF
         self.send()
         self.buffer = MUSIC_OFF
